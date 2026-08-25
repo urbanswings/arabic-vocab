@@ -5,21 +5,25 @@ describes what learners study, how a lesson behaves, how activities progress,
 and how the playful and standard presentation modes share the same educational
 foundation.
 
-> Status: product-design proposal. All published Arabic, transliteration,
-> translations, illustrations, and pronunciation audio require expert review.
+> Status: product-design proposal. All published Quranic text, Arabic,
+> transliteration, translations, explanations, illustrations, and pronunciation
+> audio require qualified language and theological review.
 
 ## Experience goals
 
 The tutorial should help a new learner recognize, understand, hear, and recall
-useful Modern Standard Arabic words. It should not attempt to teach the whole
-language at once.
+high-frequency Quranic Arabic vocabulary. It should build a practical bridge to
+reading verses while making clear that a short gloss cannot capture every
+meaning of a word in every context. It should not attempt to teach the whole
+language, grammar, or tafsir at once.
 
 A successful first session lets the learner:
 
 - understand how to navigate without reading lengthy instructions;
-- learn five concrete words in three to five minutes;
+- learn up to five high-frequency words in three to five minutes;
 - hear every word as often as needed;
-- answer using pictures, text, and listening cues;
+- answer using text, phrase context, pictures where appropriate, and listening
+  cues;
 - make mistakes without losing progress or feeling punished;
 - leave knowing what to learn or review next.
 
@@ -42,9 +46,10 @@ Reduced-motion, sound, and transliteration controls remain independent settings.
 
 ## Curriculum principles
 
-Content is organized from concrete, visible concepts toward words that require
-more context. Early topics favor objects and actions that are easy to illustrate
-and distinguish.
+Content is organized from frequent, recognizable Quranic vocabulary toward
+words and structures that require more context. Concrete nouns can use images;
+theological concepts, particles, and morphology require phrases and guided
+explanations rather than forced visual metaphors.
 
 - Introduce no more than five new words in a short lesson.
 - Reuse known words in later topics rather than teaching every item once.
@@ -52,27 +57,83 @@ and distinguish.
 - Introduce grammatical information only when it helps vocabulary use.
 - Teach the vocalized Arabic form first and treat transliteration as a removable
   support, not the target skill.
-- Label Modern Standard Arabic and any future dialect content explicitly.
-- Prefer useful frequency and everyday relevance over exhaustive categories.
+- Teach particles through short phrases because a single English gloss rarely
+  explains their full function.
+- Teach roots as relationships between attested words, not as a mechanical way
+  to guess meanings.
+- Cite the surah and verse for every excerpt and preserve the exact Quranic text.
+- Prefer Quranic frequency and usefulness for comprehension over exhaustive
+  categories.
 
-## Initial topic map
+## Curriculum tracks
 
-The first content pack should contain roughly 40–50 reviewed words. The lists
-below describe scope, not final translations or publication-ready language data.
+The curriculum has two connected tracks. **Quranic Vocabulary** is the primary
+beginner path. **Sarf Explorer** becomes available after the learner has enough
+known words to recognize useful word-family relationships.
 
-| Order | Topic | Learning purpose | Suggested scope |
+```text
+Vocabulary recognition
+        ↓
+Words inside Quranic phrases
+        ↓
+Root and pattern discovery
+        ↓
+Guided verse analysis
+```
+
+### Track 1 — High-frequency Quranic vocabulary
+
+The first content pack should contain roughly 40–50 reviewed words. The examples
+below define scope only; they are not publication-ready translations or
+theological explanations.
+
+| Order | Unit | Learning purpose | Example scope |
 | --- | --- | --- | --- |
-| 1 | Greetings | Produce an immediate useful interaction | hello, welcome, goodbye, yes, no |
-| 2 | Colours | Practice visual recognition with clear choices | red, blue, green, yellow, black, white |
-| 3 | Animals | Connect memorable illustrations to concrete nouns | cat, dog, bird, fish, horse, rabbit |
-| 4 | Food and drink | Build useful daily vocabulary | water, bread, milk, apple, banana, rice |
-| 5 | Family | Introduce familiar people and gender naturally | mother, father, brother, sister, family |
-| 6 | Home | Recognize common surroundings | house, door, window, chair, table, bed |
-| 7 | Numbers 1–10 | Add listening and sequence practice | one through ten |
-| 8 | Everyday actions | Move from objects to simple verbs | eat, drink, go, come, read, write |
+| 1 | Foundational concepts | Recognize central terms without reducing them to one universal gloss | `رَبّ` (rabb), `دِين` (dīn), `إِيمَان` (īmān), `تَقْوَى` (taqwā) |
+| 2 | Creation and the world | Build recognition with concrete and recurring nouns | `أَرْض` (arḍ), `سَمَاء` (samāʾ), water, sun, night |
+| 3 | People and the inner self | Connect recurring human concepts | `قَلْب` (qalb), soul/self, people, believer |
+| 4 | Revelation and knowledge | Recognize terms surrounding scripture and knowledge | `كِتَاب` (kitāb), verse/sign, knowledge, messenger |
+| 5 | High-frequency actions | Recognize common verbal ideas before formal morphology | say, know, believe, do, create |
+| 6 | Prepositions and connections | Read structural relationships inside short phrases | `مِنْ` (min), in, to, upon, with |
+| 7 | Core particles | Notice emphasis, condition, time, and negation in context | `إِنَّ` (inna), `إِذَا` (idhā), `لَا` (lā) |
+| 8 | Names and attributes in context | Recognize selected recurring attributes with careful theological review | `العَلِيم` (al-ʿAlīm) and other approved examples |
 
-Topics can contain multiple five-word lessons. A learner does not need to finish
-an entire topic before reviewing due words from another topic.
+Important distinctions must be preserved in the lessons:
+
+- `دِين` can carry senses including religion, judgment, recompense, or way of
+  life depending on context.
+- `السَّمَاء` is singular, while `السَّمَاوَات` is plural.
+- `عَالِم` describes one who knows or is learned; `العَلِيم` is taught carefully
+  when it occurs as a divine name.
+- `لَا`, `مِنْ`, `إِنَّ`, and `إِذَا` cannot be mastered through one-to-one
+  English substitutions. Their lesson examples must demonstrate their function.
+
+Units can contain multiple lessons of up to five new words. A learner does not
+need to finish an entire unit before reviewing due words from another unit.
+
+### Track 2 — Roots and patterns (sarf)
+
+This companion track introduces morphology after learners recognize a useful
+base vocabulary. It uses standard terms consistently:
+
+- **Mujarrad** (`مُجَرَّد`): the basic, unaugmented root pattern;
+- **Mazīd** (`مَزِيد`): forms with additional letters;
+- **Ism al-fāʿil** (`اِسْمُ الفَاعِل`): the active participle;
+- **Ism al-mafʿūl** (`اِسْمُ المَفْعُول`): the passive participle.
+
+The progression is:
+
+1. Identify a three-letter root inside already known words.
+2. Explore an attested word family, such as `ك-ت-ب`, in Quranic context.
+3. Distinguish root letters from added letters visually.
+4. Recognize active and passive participles in selected examples.
+5. Compare a small number of derived verb forms.
+6. Apply the skill in a guided verse analysis.
+
+Patterns express tendencies, not guaranteed definitions. For example, Form X
+(`اِسْتَفْعَلَ`) often conveys seeking or requesting, but the app must never tell
+learners to derive an unfamiliar word's meaning mechanically. Attested usage,
+syntax, and verse context govern the explanation.
 
 ## Content unit
 
@@ -83,15 +144,18 @@ future correction:
 - Arabic lemma and beginner-friendly vocalized form;
 - translation and reviewed transliteration;
 - native-speaker pronunciation audio;
-- clear illustration or photograph with recorded usage rights;
+- a verse occurrence with surah and verse reference;
+- a reviewed contextual gloss and an optional short usage note;
+- a clear illustration with recorded usage rights when the meaning is concrete;
 - part of speech and relevant grammatical gender;
-- plural or contextual note when useful;
-- Modern Standard Arabic or explicit dialect label;
+- root and morphological pattern when reviewed and pedagogically useful;
+- plural, grammatical, or theological note when useful;
 - content version and review status.
 
-Images should communicate the intended meaning without relying on stereotypes,
-embedded text, or culturally ambiguous gestures. Recordings should have
-consistent volume, pacing, pronunciation standard, and background noise.
+Abstract or theological concepts must not be represented by misleading literal
+images. Where an image is inappropriate, typography, phrase context, and neutral
+visual structure take its place. Recordings should have consistent volume,
+pacing, pronunciation standard, and background noise.
 
 ## Tutorial structure
 
@@ -105,15 +169,16 @@ Discover → Recognize → Recall → Review
 
 ### 1. Discover
 
-Introduce one word at a time with Arabic, an image, and pronunciation. The
-learner may replay audio. The meaning and optional transliteration are visible,
-so this stage is exposure rather than assessment.
+Introduce one word at a time with Arabic, pronunciation, a contextual gloss, and
+an image when appropriate. The learner may replay audio and open the cited verse.
+Meaning and optional transliteration are visible, so this stage is exposure
+rather than assessment.
 
 ### 2. Recognize
 
 Ask the learner to identify a recently introduced word while strong cues remain.
-Examples include selecting the correct image after seeing Arabic or selecting
-Arabic after seeing an image.
+Examples include selecting a meaning after seeing Arabic, selecting Arabic from
+a concrete image, or identifying a highlighted word inside a short phrase.
 
 ### 3. Recall
 
@@ -136,7 +201,7 @@ Choose transliteration preference
    ↓
 Preview audio and motion controls
    ↓
-Start recommended topic
+Start recommended unit
    ↓
 Learn five words
    ↓
@@ -156,9 +221,9 @@ can be changed later from settings.
 The home screen offers one primary recommendation and a small set of secondary
 choices:
 
-1. **Continue learning** when the current topic has unfinished lessons.
+1. **Continue learning** when the current unit has unfinished lessons.
 2. **Review due words** when useful review material is available.
-3. **Explore topics** to choose another subject.
+3. **Explore curriculum** to choose another unit or unlocked track.
 4. **View progress** to see learned and developing words.
 
 The app should not manufacture urgency through lost streaks, countdowns, lives,
@@ -172,7 +237,8 @@ A standard five-word lesson follows this sequence:
 2. Introduce words one by one through `VocabularyCard`.
 3. Run two or three recognition questions after the first few words.
 4. Introduce the remaining words.
-5. Run a mixed practice round containing image, text, and audio prompts.
+5. Run a mixed practice round containing phrase, text, audio, and appropriate
+   image prompts.
 6. Revisit missed words with an easier cue before retrying recall.
 7. End with a concise summary and the next recommended action.
 
@@ -219,6 +285,50 @@ resume at a sensible boundary rather than in the middle of an animation.
 - Purpose: retrieve previously learned words with minimal setup.
 - Input: a short mixed queue using the activities above.
 - Constraint: prioritize useful evidence of recall over a long quiz score.
+
+### Word spotlight
+
+- Purpose: recognize a learned word in an authentic Quranic excerpt.
+- Input: locate or identify the highlighted word, then inspect its contextual
+  gloss.
+- Constraint: cite the surah and verse and never alter the excerpt for the game.
+
+### Phrase builder
+
+- Purpose: notice relationships among known words in a short phrase.
+- Input: arrange provided word tiles or match them to a word-by-word gloss.
+- Constraint: do not present the activity as a substitute for Arabic syntax.
+
+### Particle contrast
+
+- Purpose: observe what a particle contributes in two carefully selected
+  contexts.
+- Input: compare highlighted phrases and choose the appropriate explanation.
+- Constraint: avoid claiming a particle always has one English equivalent.
+
+### Root explorer
+
+- Purpose: see related, attested words branching from a shared root.
+- Input: select a word to reveal its pattern, meaning, and verse occurrence.
+- Constraint: distinguish a helpful relationship from a guaranteed definition.
+
+### Pattern highlighter
+
+- Purpose: distinguish root letters from added letters.
+- Input: inspect or select colour-coded letters in an attested word.
+- Constraint: colour must be paired with labels or shapes for accessibility.
+
+### Word-family match
+
+- Purpose: connect known words that share a reviewed root.
+- Input: match forms to meanings or grammatical roles.
+- Constraint: never imply that related forms have identical meanings.
+
+### Context choice
+
+- Purpose: select the appropriate gloss for a word in a particular verse.
+- Input: compare reviewed meanings and choose using the displayed context.
+- Constraint: explanations require language and theological review.
 
 Arabic letter tracing is outside the vocabulary MVP. It requires a separate,
 expert-reviewed handwriting design for connected letter shapes and stroke paths.
@@ -292,8 +402,8 @@ after the event data and behavior are well tested.
 | Welcome | Explain the value in one sentence | Begin |
 | Preferences | Select presentation, transliteration, sound, and motion | Save and continue |
 | Home | Recommend the next useful session | Continue or review |
-| Topics | Browse available and upcoming content | Open a topic |
-| Topic detail | Show lesson sequence and progress | Start or resume lesson |
+| Curriculum | Browse available units and learning tracks | Open a unit |
+| Unit detail | Show lesson sequence and progress | Start or resume lesson |
 | Lesson | Host discovery and practice activities | Answer or continue |
 | Session summary | Reflect what changed and what is next | Finish or review misses |
 | Progress | Inspect words by learning status | Start targeted review |
@@ -308,6 +418,8 @@ have an obvious way to pause, exit, replay audio, and recover from an error.
   information.
 - Arabic and Latin text can have different direction within the same screen;
   direction is applied at the component level rather than mirroring everything.
+- Quranic excerpts display in a typeface and layout verified for textual
+  accuracy; educational highlighting must not obscure letters or diacritics.
 - Diacritics must remain clear at supported sizes and must not be clipped.
 - Every touch target is at least 44×44 points and has a screen-reader label.
 - Colour is never the only way to show state or correctness.
@@ -320,12 +432,15 @@ have an obvious way to pause, exit, replay audio, and recover from an error.
 Every release item passes through these states:
 
 ```text
-Draft → Language review → Asset review → In-app QA → Approved
+Draft → Quranic text verification → Language and theology review
+      → Asset review → In-app QA → Approved
 ```
 
 The checks include:
 
 - Arabic spelling, diacritics, meaning, and register;
+- exact Quranic text plus correct surah and verse reference;
+- contextual gloss and theological framing;
 - transliteration consistency;
 - native-speaker audio pronunciation and quality;
 - image clarity, cultural appropriateness, and licence record;
@@ -340,10 +455,12 @@ learner progress is not discarded.
 
 The tutorial MVP is ready for user testing when:
 
-- at least 40 words across 6–8 topics have completed language and asset review;
-- every word has working offline audio and an approved visual;
-- one complete topic supports discovery, picture choice, word choice, matching,
-  listening, and scheduled review;
+- at least 40 high-frequency words across 6–8 units have completed Quranic text,
+  language, theological, and asset review;
+- every word has working offline audio, a verified verse occurrence, and an
+  approved visual treatment;
+- one complete unit supports discovery, word choice, word spotlight, listening,
+  context practice, and scheduled review;
 - playful and standard presentation modes complete the same lesson successfully;
 - transliteration can be visible, hidden, or adaptive;
 - reduced-motion and screen-reader flows preserve all learning information;
@@ -354,8 +471,10 @@ The tutorial MVP is ready for user testing when:
 
 1. Which learner group should be recruited first for usability testing?
 2. Is English the only interface and translation language at launch?
-3. Which language-review standard will govern vocalization and transliteration?
-4. What illustration style can work for both presentation modes?
+3. Which qualified reviewers and source editions will govern Quranic text,
+   vocalization, translation, morphology, and theological notes?
+4. What visual style can support both presentation modes without depicting
+   abstract theological concepts literally?
 5. Will audio be commissioned before prototyping or recorded temporarily for
    internal validation?
 6. How much learner control should adaptive transliteration expose?
@@ -368,5 +487,6 @@ The tutorial MVP is ready for user testing when:
 - Remote content management and downloadable packs
 - Speech recognition or pronunciation scoring
 - Arabic handwriting and letter tracing
-- Dialect lessons mixed into Modern Standard Arabic content
+- Advanced syntax, full grammatical parsing, and independent tafsir instruction
+- Dialect lessons mixed into Quranic Arabic content
 - Parent or teacher dashboards
