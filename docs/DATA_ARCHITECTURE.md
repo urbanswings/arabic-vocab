@@ -49,6 +49,29 @@ Attempt event log ──► Review projector ──► Current review state
 - The plain TypeScript learning engine evaluates answers and calculates review
   transitions without depending on React Native.
 
+## Reference ingestion boundary
+
+Files in [Vocabulary Reference Sources](../references/README.md) are development
+inputs, not mobile runtime assets. They feed a separate, reproducible candidate
+pipeline:
+
+```text
+Raw source adapter → source-shaped record → normalized candidate
+                  → discrepancy report → reviewed content draft
+```
+
+- Raw files are immutable inputs identified by hash.
+- Each source has its own adapter; no shared parser assumes equivalent schemas.
+- Original forms, counts, ranks, coordinates, and part-of-speech labels are
+  preserved alongside normalized proposals.
+- Normalization records its algorithm version and never overwrites source data.
+- Cross-source disagreements become explicit conflicts for review.
+- Only approved content-pack output can be bundled into the mobile app.
+
+Large PDFs and workbooks must not increase the production app download size.
+Generated candidate tables and discrepancy reports belong to development tooling
+and are reproducible rather than hand-edited sources of truth.
+
 ## Main records
 
 ### Content metadata
@@ -229,4 +252,3 @@ SQLite file between devices.
 - Lesson resume begins at a stable boundary.
 - Clearing progress removes all learner-owned records.
 - The local-only disclosure matches actual platform behavior.
-

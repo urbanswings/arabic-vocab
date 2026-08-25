@@ -457,6 +457,11 @@ gate establishes the Quranic text source, translation and gloss policy,
 transliteration standard, reviewer authority, theological scope, licensing, and
 correction process.
 
+Frequency tables, root lists, and classified word lists in [Vocabulary Reference
+Sources](../references/README.md) help generate candidates. Frequency does not
+automatically determine lesson order, and reference records never bypass the
+review gate.
+
 Review depth is risk-based:
 
 - **Lexical:** relatively concrete vocabulary still receives Quranic text and

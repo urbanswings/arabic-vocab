@@ -24,6 +24,22 @@ Each decision must name an owner, decision date, source/version, rationale, and
 reconsideration trigger. Until then, sample text and translations are fixtures
 for interaction testing only and must be labelled accordingly.
 
+## Research reference inventory
+
+The repository includes frequency, root, and classified-list research inputs in
+[Vocabulary Reference Sources](../references/README.md). They may generate and
+compare curriculum candidates, but their presence does not grant approval,
+establish textual authority, or resolve redistribution rights.
+
+Before a source influences release content, governance records its provenance,
+licence, corpus edition, tokenization and normalization method, known
+limitations, file checksum, and ingestion version. Sources with unresolved
+provenance or rights remain internal research material.
+
+Conflicting counts are expected because sources may count surface forms, lemmas,
+clitics, vocalization, and orthographic variants differently. Retain each count
+with its method and source; never average or silently select among them.
+
 ## Source hierarchy
 
 The content model distinguishes four things that must not be silently merged:
@@ -124,6 +140,8 @@ Each publishable item records:
 ## Workflow
 
 ```text
+Reference-source admission and candidate generation
+  ↓
 Draft
   ↓
 Quranic text verification
@@ -178,4 +196,3 @@ resolve or scope the disputed content.
 - Reviewer body, qualifications, and interpretive methodology
 - Source attribution design in the app
 - Correction owner and urgent-withdrawal procedure
-

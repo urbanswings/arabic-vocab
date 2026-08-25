@@ -16,6 +16,9 @@ learning instead of distracting from it.
   blocking source, translation, review, licensing, and correction decisions.
 - [Local Data and Learning-State Architecture](docs/DATA_ARCHITECTURE.md) defines
   offline persistence, attempt evidence, scheduling state, and migrations.
+- [Vocabulary Reference Sources](references/README.md) inventories the raw
+  frequency, root, and classified-list inputs used to generate curriculum
+  candidates.
 
 ## Product vision
 
