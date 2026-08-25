@@ -8,6 +8,9 @@ learning instead of distracting from it.
 > Status: early product and architecture design. No application code has been
 > generated yet.
 
+The detailed curriculum, lesson flow, activity behavior, and content-production
+plan live in [Tutorial Content and Experience Design](docs/TUTORIAL_DESIGN.md).
+
 ## Product vision
 
 Arabic Vocabulary helps beginners build a useful everyday vocabulary in small,
