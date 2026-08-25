@@ -8,15 +8,22 @@ learning instead of distracting from it.
 > Status: early product and architecture design. No application code has been
 > generated yet.
 
-The detailed curriculum, lesson flow, activity behavior, and content-production
-plan live in [Tutorial Content and Experience Design](docs/TUTORIAL_DESIGN.md).
+## Design documents
+
+- [Tutorial Content and Experience Design](docs/TUTORIAL_DESIGN.md) defines the
+  curriculum, lesson flow, activities, and staged validation plan.
+- [Content Governance and Source Policy](docs/CONTENT_GOVERNANCE.md) defines the
+  blocking source, translation, review, licensing, and correction decisions.
+- [Local Data and Learning-State Architecture](docs/DATA_ARCHITECTURE.md) defines
+  offline persistence, attempt evidence, scheduling state, and migrations.
 
 ## Product vision
 
-Arabic Vocabulary helps beginners build a useful everyday vocabulary in small,
-repeatable sessions. A learner sees an illustration, reads the Arabic word and
-its transliteration, hears a native pronunciation, and practices recalling it
-through touch-friendly activities.
+Arabic Vocabulary helps beginners recognize high-frequency Quranic Arabic in
+small, repeatable sessions. A learner reads and hears a word, explores its
+meaning in a verified verse context, and practices recalling it through
+touch-friendly activities. Images support concrete meanings; phrases and guided
+explanations support particles and theological concepts.
 
 The first version should feel:
 
@@ -29,23 +36,26 @@ The first version should feel:
 ## Who it is for
 
 - Children learning with a parent or independently
-- Adult beginners learning Modern Standard Arabic
-- Heritage learners strengthening reading and vocabulary
+- Adult beginners learning Quranic Arabic
+- Heritage learners strengthening Quranic reading and vocabulary
 
-The initial content will use Modern Standard Arabic. Dialects can be added later
-as explicitly labelled content packs so pronunciations and meanings are never
-mixed silently.
+The initial curriculum focuses on high-frequency Quranic vocabulary. Roots and
+patterns (sarf) form a later companion track after learners establish a useful
+vocabulary base. The app does not present itself as independent tafsir or reduce
+context-sensitive words to universal one-word translations.
 
 ## First release (MVP)
 
 The MVP is deliberately small:
 
-1. Choose a topic such as animals, food, family, colours, or the home.
-2. Learn a short set of words using illustrated cards and pronunciation audio.
+1. Choose a Quranic vocabulary unit such as foundational concepts, creation,
+   revelation and knowledge, high-frequency actions, or core particles.
+2. Learn a short set of words using pronunciation, contextual glosses, verified
+   verse occurrences, and appropriate visuals.
 3. Practice with three activities:
-   - tap the matching picture;
-   - match a word to a picture;
-   - listen and choose the word you heard.
+   - choose the contextual meaning of a word;
+   - find a learned word in a verified verse excerpt;
+   - listen and choose the corresponding word or meaning.
 4. See immediate animated feedback after each answer.
 5. Review words that are due for practice.
 6. Track progress locally on the device.
@@ -244,6 +254,9 @@ games. Initial widgets include:
 - `MatchPairs`: connect or flip matching Arabic words and illustrations, with a
   tap-to-select alternative to dragging.
 - `ListeningChoice`: replay audio and choose from large, readable answers.
+- `WordSpotlight`: locate a learned word in a verified Quranic excerpt.
+- `ContextChoice`: select a reviewed gloss appropriate to a verse occurrence.
+- `RootExplorer`: inspect attested word families in the later sarf track.
 - `ProgressPath`: show session progress without encouraging rushed answers.
 
 Each widget should support right-to-left text, screen readers, large text, a
@@ -258,26 +271,30 @@ decorative animation is disabled.
 
 ## Content format and quality
 
-Every content pack should be validated during development and include:
+Every content pack should follow the approved governance policy and include:
 
-- a stable ID and topic;
-- fully vocalized Arabic where appropriate for beginners;
-- reviewed transliteration and translation;
-- an image with usage rights recorded;
+- a stable ID, unit, and content version;
+- exact Quranic text with a verified surah and verse reference;
+- reviewed vocalization, contextual gloss, transliteration, and translation
+  attribution;
+- an appropriate visual treatment with usage rights recorded;
 - pronunciation audio from a qualified native speaker;
-- optional notes for gender, plural form, or usage context.
+- review tier and approval history;
+- optional grammatical, morphological, or theological notes.
 
-Arabic content should be reviewed by a language expert. Text-to-speech may be
-useful during prototyping, but should not silently replace reviewed human audio
-in published lessons.
+Published content requires the language, Quranic-text, theological, audio, and
+rights reviews applicable to its risk tier. Text-to-speech may be useful during
+internal prototyping, but should not silently replace reviewed human audio in
+published lessons.
 
 ## Privacy and child safety
 
 The MVP stores learning progress on the device and collects no personal data by
-default. If analytics are introduced, they should be minimal, documented, and
-designed with child privacy requirements in mind. External links, purchases,
-account creation, and data sharing require an adult-facing gate when the product
-is presented to children.
+default. It tells learners that progress will not transfer after removing the
+app, clearing its data, or changing devices. If analytics are introduced, they
+should be minimal, documented, and designed with child privacy requirements in
+mind. External links, purchases, account creation, and data sharing require an
+adult-facing gate when the product is presented to children.
 
 ## Delivery phases
 
@@ -289,9 +306,9 @@ is presented to children.
 
 ### Phase 2 — MVP
 
-- Add topic selection, the three practice activities, local progress, and review
-  scheduling.
-- Ship a small reviewed content set with complete images and audio.
+- Add curriculum selection, the core practice activities, local progress, and
+  review scheduling.
+- Ship a small reviewed content set with approved visual treatments and audio.
 - Add unit, component, and critical end-to-end tests.
 
 ### Phase 3 — Product validation
@@ -304,7 +321,7 @@ is presented to children.
 ### Later, if validated
 
 - Parent/teacher profiles and progress summaries
-- Downloadable topic or dialect packs
+- Downloadable curriculum packs
 - Optional cross-device sync
 - A content authoring and review workflow
 - Arabic letter tracing, after expert-reviewed connected-letter shapes and
@@ -315,10 +332,11 @@ is presented to children.
 
 Before implementation, the product needs answers to these questions:
 
-1. What age range is the primary design target?
-2. Is the teaching language English only for the first release?
-3. Should transliteration be always visible, optional, or gradually removed?
-4. Which 30–50 words and topics form the first reviewed curriculum?
+1. What age range is the primary usability-testing target?
+2. Is English the only interface and translation language at launch?
+3. Which 15–20 words form the first reviewed learner pilot?
+4. What visual style can serve both presentation modes without depicting
+   theological concepts literally?
 5. Will launch content use commissioned illustrations and recorded audio?
 6. Is the first launch intended for both iOS and Android?
 
@@ -326,7 +344,7 @@ Before implementation, the product needs answers to these questions:
 
 - A learner can complete a five-word lesson on an iOS and Android device.
 - Arabic displays correctly at all supported text sizes and directions.
-- Every word has an image and replayable pronunciation.
+- Every word has an approved visual treatment and replayable pronunciation.
 - At least one practice widget provides accessible animated feedback.
 - Progress survives an app restart.
 - The lesson works without a network connection.

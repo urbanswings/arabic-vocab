@@ -214,7 +214,12 @@ Return home with a clear next action
 
 Onboarding should take less than one minute. It should not require an account,
 age, name, notifications, or analytics consent to begin learning. Preferences
-can be changed later from settings.
+can be changed later from settings. Before the first lesson, the app states:
+
+> Your learning progress is stored only on this device. It will not transfer if
+> the app is removed, its data is cleared, or you change devices.
+
+The same notice remains available in Settings near progress-management actions.
 
 ## Returning-session flow
 
@@ -368,8 +373,23 @@ Transliteration has three modes:
 
 - **Visible:** shown during discovery and eligible practice prompts.
 - **Hidden:** omitted unless the learner explicitly requests a hint.
-- **Adaptive:** visible during discovery, then gradually removed as recognition
-  improves.
+- **Adaptive:** follows the deterministic progression below.
+
+For the pilot, adaptive transliteration behaves as follows:
+
+1. Show it during discovery.
+2. Keep it visible during initial recognition.
+3. After two correct, unhinted recognition answers on separate prompts, hide it
+   by default for that vocabulary item.
+4. Present a recall prompt without transliteration.
+5. Keep it hidden after a correct, unhinted recall.
+6. Restore it for the next exposure after an incorrect answer or explicit
+   transliteration request.
+7. Always respect a learner's global Visible or Hidden override.
+
+The thresholds are configuration, not hard-coded UI behavior. Every attempt
+records whether transliteration was visible or requested so the scheduler does
+not treat supported recognition as equivalent to unsupported recall.
 
 Hints should follow a gentle ladder:
 
@@ -429,6 +449,26 @@ have an obvious way to pause, exit, replay audio, and recover from an error.
 
 ## Content production workflow
 
+### Content governance gate
+
+Content production cannot begin until the policies in
+[Content Governance and Source Policy](CONTENT_GOVERNANCE.md) are approved. The
+gate establishes the Quranic text source, translation and gloss policy,
+transliteration standard, reviewer authority, theological scope, licensing, and
+correction process.
+
+Review depth is risk-based:
+
+- **Lexical:** relatively concrete vocabulary still receives Quranic text and
+  language verification.
+- **Context-sensitive:** polysemous words, particles, and grammatical structures
+  require contextual language review.
+- **Theologically sensitive:** divine attributes and central faith concepts
+  require explicit theological approval in addition to language review.
+
+No sensitive explanation is published on the assumption that reviewer or source
+decisions can be resolved later.
+
 Every release item passes through these states:
 
 ```text
@@ -451,9 +491,31 @@ The checks include:
 Corrections update the content version while preserving the stable item ID so
 learner progress is not discarded.
 
-## MVP content and design acceptance
+## Validation stages
 
-The tutorial MVP is ready for user testing when:
+Interaction and content-authority risks are validated separately.
+
+### Internal interaction prototype
+
+- Use five internal-only sample words.
+- Validate Arabic rendering, audio latency, reduced motion, navigation, and
+  lesson resume behavior.
+- Temporary audio and placeholder visuals are acceptable when clearly marked and
+  never distributed as approved learning content.
+
+### Learner pilot
+
+- Use 15–20 reviewed words in one coherent unit.
+- Validate Discover → Recognize → Recall → Review with representative learners.
+- Test the deterministic adaptive-transliteration behavior.
+- Require verified Quranic text and suitable review for anything shown to
+  external participants.
+- Treat interaction findings as permission to refine the lesson before scaling
+  content production.
+
+### MVP release
+
+The tutorial MVP is ready for release when:
 
 - at least 40 high-frequency words across 6–8 units have completed Quranic text,
   language, theological, and asset review;
@@ -467,18 +529,19 @@ The tutorial MVP is ready for user testing when:
 - learners can pause, resume, make mistakes, and finish without assistance;
 - review state and preferences survive an app restart.
 
+The local-only progress notice must be visible during onboarding and in Settings.
+The behavior for restart, update, data clearing, reinstall, and device changes
+must match [Local Data and Learning-State Architecture](DATA_ARCHITECTURE.md).
+
 ## Open product decisions
 
 1. Which learner group should be recruited first for usability testing?
 2. Is English the only interface and translation language at launch?
-3. Which qualified reviewers and source editions will govern Quranic text,
-   vocalization, translation, morphology, and theological notes?
-4. What visual style can support both presentation modes without depicting
+3. What visual style can support both presentation modes without depicting
    abstract theological concepts literally?
-5. Will audio be commissioned before prototyping or recorded temporarily for
+4. Will audio be commissioned before prototyping or recorded temporarily for
    internal validation?
-6. How much learner control should adaptive transliteration expose?
-7. Which simple spaced-review intervals should the prototype use?
+5. Which simple spaced-review intervals should the prototype use?
 
 ## Explicitly deferred
 
