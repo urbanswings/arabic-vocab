@@ -68,7 +68,7 @@ are intentionally outside the first release.
 | --- | --- | --- |
 | Mobile framework | Expo + React Native | One TypeScript codebase for iOS and Android, with straightforward device testing |
 | Navigation | Expo Router | File-based, typed navigation with deep-link support |
-| Animation | React Native Reanimated | Smooth interaction and feedback animations on the UI thread |
+| Animation | React Native Reanimated, with optional Rive | Reanimated handles UI feedback; Rive can be tested for an interactive character without becoming a dependency of every widget |
 | Local state | Zustand | Small, explicit state stores without heavy boilerplate |
 | On-device data | SQLite via Expo | Durable progress, review history, and offline content metadata |
 | Content validation | Zod | Validates vocabulary packs before they reach a lesson |
@@ -77,6 +77,9 @@ are intentionally outside the first release.
 
 These are proposed defaults. A short prototype should validate Arabic rendering,
 audio latency, and animation performance before the choices are locked in.
+Redux and a remote backend are not required for the MVP. Component-local state
+will drive temporary animation, Zustand will hold only the active lesson/session
+state, and SQLite will remain the source of truth for durable progress.
 
 ## Architecture
 
@@ -100,6 +103,19 @@ Repository interfaces
        ▼         ▼
  Local SQLite   Bundled content and audio
 ```
+
+The app will offer two presentation modes powered by the same components and
+learning rules:
+
+- **Playful mode:** larger controls, expressive illustrations, optional friendly
+  sounds, and more celebratory motion.
+- **Standard mode:** restrained colour, clean typography, and subtle
+  micro-interactions.
+
+Presentation mode is independent of learning level. It is a user preference,
+not an assumption that children are beginners or adults are advanced. Shared
+theme tokens and explicit component variants will provide the differences; a
+formal widget factory and duplicated component trees are unnecessary initially.
 
 ### Suggested project structure
 
@@ -141,6 +157,33 @@ tests/
   code and learner progress.
 - Audio playback, analytics, and future sync live behind interfaces so platform
   or service changes do not spread through the UI.
+- Animation frames and transient visual state remain inside their widget rather
+  than travelling through the global store.
+- Learning actions produce semantic outcomes such as `correct`, `incorrect`, or
+  `retry`; the interface turns those outcomes into accessible visual and audio
+  feedback.
+
+### Answer interaction flow
+
+```text
+Learner selects an answer
+           │
+           ▼
+Learning engine evaluates it
+           │
+           ▼
+Outcome: correct / incorrect / retry
+      ┌────┼──────────┬──────────────┐
+      ▼    ▼          ▼              ▼
+ Save attempt   Schedule review   Announce result
+                                      │
+                                      ▼
+                           Local animation and sound
+```
+
+Listening to a word is not an assessed answer. Audio playback is handled by an
+audio service, while answer evaluation and review scheduling stay in the plain
+TypeScript learning engine.
 
 ## Core data model
 
@@ -148,12 +191,24 @@ tests/
 type VocabularyItem = {
   id: string;
   topicId: string;
-  arabic: string;
+  arabicLemma: string;
+  vocalizedArabic: string;
   transliteration: string;
   translations: Record<string, string>;
   imageAsset: string;
-  audioAsset: string;
+  pronunciations: Pronunciation[];
+  grammaticalGender?: "masculine" | "feminine";
+  pluralForm?: string;
+  register: "modern-standard" | "dialect";
+  dialect?: string;
   tags: string[];
+  contentVersion: number;
+};
+
+type Pronunciation = {
+  id: string;
+  audioAsset: string;
+  speakerLocale: string;
 };
 
 type ReviewState = {
@@ -163,6 +218,12 @@ type ReviewState = {
   lastReviewedAt?: string;
   attempts: number;
   correctAttempts: number;
+};
+
+type LearnerPreferences = {
+  presentationMode: "playful" | "standard";
+  transliteration: "visible" | "hidden" | "adaptive";
+  reducedMotion: boolean;
 };
 ```
 
@@ -177,13 +238,20 @@ games. Initial widgets include:
 
 - `VocabularyCard`: tap to hear pronunciation; swipe or press to continue.
 - `PictureChoice`: bounce or glow on a correct selection; gently reset on error.
-- `MatchPairs`: connect or flip matching Arabic words and illustrations.
+- `MatchPairs`: connect or flip matching Arabic words and illustrations, with a
+  tap-to-select alternative to dragging.
 - `ListeningChoice`: replay audio and choose from large, readable answers.
 - `ProgressPath`: show session progress without encouraging rushed answers.
 
 Each widget should support right-to-left text, screen readers, large text, a
 reduced-motion mode, and alternatives to colour-only feedback. Touch targets
-should be at least 44×44 points.
+should be at least 44×44 points. Card reveals must offer a fade or instant
+alternative to 3D flips. Continuous animation and sound are avoided.
+
+Rive is reserved for interactions that benefit from a stateful character or
+illustration. Lottie may be used for short fixed celebrations. Both are optional:
+semantic feedback, reduced-motion behaviour, and the lesson must still work when
+decorative animation is disabled.
 
 ## Content format and quality
 
@@ -236,6 +304,8 @@ is presented to children.
 - Downloadable topic or dialect packs
 - Optional cross-device sync
 - A content authoring and review workflow
+- Arabic letter tracing, after expert-reviewed connected-letter shapes and
+  stroke paths are available
 - Speech practice, only after pronunciation evaluation is proven reliable
 
 ## Early decisions to make
