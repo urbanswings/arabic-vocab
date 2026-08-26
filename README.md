@@ -5,8 +5,8 @@ clear audio, visual prompts, and simple animated activities. The app is intended
 to be welcoming to both children and adults, with interaction that supports
 learning instead of distracting from it.
 
-> Status: early product and architecture design. No application code has been
-> generated yet.
+> Status: interaction prototype. The first Root Explorer screen is implemented
+> with temporary, unreviewed fixture content.
 
 ## Design documents
 
@@ -96,6 +96,28 @@ audio latency, and animation performance before the choices are locked in.
 Redux and a remote backend are not required for the MVP. Component-local state
 will drive temporary animation, Zustand will hold only the active lesson/session
 state, and SQLite will remain the source of truth for durable progress.
+
+## Run the prototype
+
+Requirements: a current Node.js installation and an iOS or Android device,
+simulator, or emulator supported by Expo.
+
+```bash
+npm install
+npm start
+```
+
+Then scan the Expo QR code or press `i`/`a` to open the appropriate simulator.
+Use `npm run web` for a browser preview and `npm run typecheck` for the current
+static validation check.
+
+The Root Explorer currently demonstrates:
+
+- horizontal swiping between three-letter roots;
+- an explanation that updates with the selected root;
+- a separate horizontal word-family carousel;
+- right-to-left Arabic rendering and accessible labels;
+- a visible warning that prototype vocabulary has not passed content review.
 
 ## Architecture
 
