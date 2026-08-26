@@ -113,11 +113,18 @@ static validation check.
 
 The Root Explorer currently demonstrates:
 
-- horizontal swiping between three-letter roots;
+- horizontal swiping through root-letter groups sourced from
+  `references/Cleaned_Root_letters.xlsx`;
 - an explanation that updates with the selected root;
-- a separate horizontal word-family carousel;
+- a separate horizontal carousel of unique Arabic forms for that root;
 - right-to-left Arabic rendering and accessible labels;
 - a visible warning that prototype vocabulary has not passed content review.
+
+Regenerate the app dataset after an intentional workbook update with:
+
+```bash
+npm run generate:roots
+```
 
 ## Architecture
 

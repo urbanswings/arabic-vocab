@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   FlatList,
   NativeScrollEvent,
@@ -12,22 +12,30 @@ import {
 } from "react-native";
 
 import {
-  prototypeRoots,
+  getPrototypeRootMeaning,
+  rootFamilies,
   RootFamily,
   RootWord
-} from "./src/data/prototypeRoots";
+} from "./src/data/rootFamilies";
 
 const HORIZONTAL_GUTTER = 20;
 
 function RootLetters({ root }: { root: RootFamily }) {
+  const compact = root.letters.length > 3;
+
   return (
     <View
       accessibilityLabel={`Arabic root ${root.rootLabel}`}
-      style={styles.lettersRow}
+      style={[styles.lettersRow, compact && styles.lettersRowCompact]}
     >
       {root.letters.map((letter, index) => (
-        <View key={`${root.id}-${index}`} style={styles.letterCircle}>
-          <Text style={styles.letter}>{letter}</Text>
+        <View
+          key={`${root.id}-${index}`}
+          style={[styles.letterCircle, compact && styles.letterCircleCompact]}
+        >
+          <Text style={[styles.letter, compact && styles.letterCompact]}>
+            {letter}
+          </Text>
         </View>
       ))}
     </View>
@@ -37,13 +45,11 @@ function RootLetters({ root }: { root: RootFamily }) {
 function WordCard({ word }: { word: RootWord }) {
   return (
     <View
-      accessibilityLabel={`${word.arabic}, ${word.transliteration}, ${word.meaning}`}
+      accessibilityLabel={`${word.arabic}, ${word.transliteration}`}
       style={styles.wordCard}
     >
       <Text style={styles.wordArabic}>{word.arabic}</Text>
       <Text style={styles.wordTransliteration}>{word.transliteration}</Text>
-      <View style={styles.wordDivider} />
-      <Text style={styles.wordMeaning}>{word.meaning}</Text>
     </View>
   );
 }
@@ -53,7 +59,7 @@ export default function App() {
   const rootListRef = useRef<FlatList<RootFamily>>(null);
   const [activeRootIndex, setActiveRootIndex] = useState(0);
   const pageWidth = Math.max(1, width - HORIZONTAL_GUTTER * 2);
-  const activeRoot = prototypeRoots[activeRootIndex];
+  const activeRoot = rootFamilies[activeRootIndex] ?? rootFamilies[0]!;
 
   const rootLayout = useCallback(
     (_: ArrayLike<RootFamily> | null | undefined, index: number) => ({
@@ -64,25 +70,19 @@ export default function App() {
     [pageWidth]
   );
 
-  const onRootSwipeEnd = useCallback(
+  const onRootScroll = useCallback(
     (event: NativeSyntheticEvent<NativeScrollEvent>) => {
       const nextIndex = Math.round(
         event.nativeEvent.contentOffset.x / pageWidth
       );
-      setActiveRootIndex(
-        Math.max(0, Math.min(nextIndex, prototypeRoots.length - 1))
+      const boundedIndex = Math.max(
+        0,
+        Math.min(nextIndex, rootFamilies.length - 1)
+      );
+      setActiveRootIndex((currentIndex) =>
+        currentIndex === boundedIndex ? currentIndex : boundedIndex
       );
     },
-    [pageWidth]
-  );
-
-  const rootPages = useMemo(
-    () =>
-      prototypeRoots.map((root) => (
-        <View key={root.id} style={[styles.rootPage, { width: pageWidth }]}>
-          <RootLetters root={root} />
-        </View>
-      )),
     [pageWidth]
   );
 
@@ -96,7 +96,9 @@ export default function App() {
             <Text style={styles.title}>Discover word families</Text>
           </View>
           <View style={styles.lessonBadge}>
-            <Text style={styles.lessonBadgeText}>1 / 3</Text>
+            <Text style={styles.lessonBadgeText}>
+              {activeRootIndex + 1} / {rootFamilies.length}
+            </Text>
           </View>
         </View>
 
@@ -104,34 +106,37 @@ export default function App() {
           <Text style={styles.sectionLabel}>Swipe to explore a root</Text>
           <FlatList
             ref={rootListRef}
-            data={prototypeRoots}
+            data={rootFamilies}
             horizontal
             pagingEnabled
             bounces={false}
             decelerationRate="fast"
             getItemLayout={rootLayout}
             keyExtractor={(root) => root.id}
-            onMomentumScrollEnd={onRootSwipeEnd}
-            renderItem={({ index }) => rootPages[index]}
+            onScroll={onRootScroll}
+            renderItem={({ item }) => (
+              <View style={[styles.rootPage, { width: pageWidth }]}>
+                <RootLetters root={item} />
+              </View>
+            )}
             showsHorizontalScrollIndicator={false}
+            scrollEventThrottle={16}
+            windowSize={3}
           />
-          <View accessibilityLabel={`Root ${activeRootIndex + 1} of ${prototypeRoots.length}`} style={styles.pageDots}>
-            {prototypeRoots.map((root, index) => (
-              <View
-                key={root.id}
-                style={[
-                  styles.pageDot,
-                  index === activeRootIndex && styles.pageDotActive
-                ]}
-              />
-            ))}
+          <View
+            accessibilityLabel={`Root ${activeRootIndex + 1} of ${rootFamilies.length}`}
+            style={styles.pagePosition}
+          >
+            <View style={styles.pageDot} />
+            <View style={[styles.pageDot, styles.pageDotActive]} />
+            <View style={styles.pageDot} />
           </View>
         </View>
 
         <View style={styles.meaningSection}>
           <Text style={styles.meaningLabel}>ROOT MEANING</Text>
           <Text accessibilityLiveRegion="polite" style={styles.meaningText}>
-            {activeRoot.meaning}
+            {getPrototypeRootMeaning(activeRoot.rootLabel)}
           </Text>
           <Text style={styles.prototypeNotice}>Prototype content · review pending</Text>
         </View>
@@ -230,6 +235,9 @@ const styles = StyleSheet.create({
     flexDirection: "row-reverse",
     gap: 14
   },
+  lettersRowCompact: {
+    gap: 8
+  },
   letterCircle: {
     alignItems: "center",
     backgroundColor: "#FFFDF8",
@@ -244,6 +252,11 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     width: 76
   },
+  letterCircleCompact: {
+    borderRadius: 25,
+    height: 50,
+    width: 50
+  },
   letter: {
     color: "#25231F",
     fontSize: 39,
@@ -251,7 +264,11 @@ const styles = StyleSheet.create({
     textAlign: "center",
     writingDirection: "rtl"
   },
-  pageDots: {
+  letterCompact: {
+    fontSize: 27,
+    lineHeight: 38
+  },
+  pagePosition: {
     alignItems: "center",
     flexDirection: "row",
     gap: 6,
@@ -364,17 +381,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontStyle: "italic",
     marginTop: 2
-  },
-  wordDivider: {
-    backgroundColor: "#E7DFD1",
-    height: 1,
-    marginVertical: 10,
-    width: 42
-  },
-  wordMeaning: {
-    color: "#4F493E",
-    fontSize: 13,
-    lineHeight: 18,
-    textAlign: "center"
   }
 });

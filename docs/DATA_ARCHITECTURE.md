@@ -72,6 +72,14 @@ Large PDFs and workbooks must not increase the production app download size.
 Generated candidate tables and discrepancy reports belong to development tooling
 and are reproducible rather than hand-edited sources of truth.
 
+The current Root Explorer prototype is generated from
+`references/Cleaned_Root_letters.xlsx` by
+`scripts/build_root_families.py`. It normalizes root-label whitespace and
+deduplicates exact Arabic forms within each root while preserving source order
+and transliteration. This narrow transformation is reproducible, but it does not
+approve the workbook's root methodology or turn surface forms into reviewed
+lemmas.
+
 ## Main records
 
 ### Content metadata
