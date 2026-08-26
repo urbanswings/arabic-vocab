@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
@@ -46,7 +46,15 @@ function RootLetters({ root }: { root: RootFamily }) {
   );
 }
 
-function WordCard({ word, onPress }: { word: RootWord; onPress: () => void }) {
+function WordCard({
+  compact,
+  word,
+  onPress
+}: {
+  compact: boolean;
+  word: RootWord;
+  onPress: () => void;
+}) {
   return (
     <Pressable
       accessibilityLabel={`${word.arabic}, ${word.transliteration}, ${word.translation}`}
@@ -55,10 +63,13 @@ function WordCard({ word, onPress }: { word: RootWord; onPress: () => void }) {
       onPress={onPress}
       style={({ pressed }) => [
         styles.wordCard,
+        compact && styles.wordCardCompact,
         pressed && styles.wordCardPressed
       ]}
     >
-      <Text style={styles.wordArabic}>{word.arabic}</Text>
+      <Text style={[styles.wordArabic, compact && styles.wordArabicCompact]}>
+        {word.arabic}
+      </Text>
       <Text style={styles.wordTransliteration}>{word.transliteration}</Text>
       <View style={styles.wordDivider} />
       <Text numberOfLines={3} style={styles.wordMeaning}>
@@ -96,12 +107,22 @@ function HighlightedVerse({
 }
 
 export default function App() {
-  const { width } = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const rootListRef = useRef<FlatList<RootFamily>>(null);
   const [activeRootIndex, setActiveRootIndex] = useState(0);
   const [selectedWord, setSelectedWord] = useState<RootWord | null>(null);
   const pageWidth = Math.max(1, width - HORIZONTAL_GUTTER * 2);
   const activeRoot = rootFamilies[activeRootIndex] ?? rootFamilies[0]!;
+  const wordsPerColumn = height >= 820 ? 2 : 1;
+  const wordColumns = useMemo(() => {
+    const columns: RootWord[][] = [];
+
+    for (let index = 0; index < activeRoot.words.length; index += wordsPerColumn) {
+      columns.push(activeRoot.words.slice(index, index + wordsPerColumn));
+    }
+
+    return columns;
+  }, [activeRoot, wordsPerColumn]);
   const selectedVerseText = selectedWord
     ? getVerseText(selectedWord.sourceId)
     : undefined;
@@ -199,15 +220,26 @@ export default function App() {
                 {activeRoot.words.length} examples
               </Text>
             </View>
-            <Text style={styles.swipeHint}>Swipe</Text>
+            <Text style={styles.swipeHint}>Swipe to see more →</Text>
           </View>
           <FlatList
-            data={activeRoot.words}
+            data={wordColumns}
             horizontal
-            key={activeRoot.id}
-            keyExtractor={(word) => `${activeRoot.id}-${word.arabic}`}
-            renderItem={({ item }) => (
-              <WordCard word={item} onPress={() => setSelectedWord(item)} />
+            key={`${activeRoot.id}-${wordsPerColumn}`}
+            keyExtractor={(column) =>
+              `${activeRoot.id}-${column.map((word) => word.arabic).join("-")}`
+            }
+            renderItem={({ item: column }) => (
+              <View style={styles.wordColumn}>
+                {column.map((word) => (
+                  <WordCard
+                    compact={wordsPerColumn === 2}
+                    key={`${word.arabic}-${word.sourceId}`}
+                    onPress={() => setSelectedWord(word)}
+                    word={word}
+                  />
+                ))}
+              </View>
             )}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.wordList}
@@ -449,7 +481,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     paddingHorizontal: 11,
     paddingVertical: 7,
-    textTransform: "uppercase"
+    textTransform: "none"
   },
   wordList: {
     paddingBottom: 26,
@@ -457,6 +489,9 @@ const styles = StyleSheet.create({
   },
   wordGap: {
     width: 12
+  },
+  wordColumn: {
+    gap: 12
   },
   wordCard: {
     alignItems: "center",
@@ -473,6 +508,11 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     width: 150
   },
+  wordCardCompact: {
+    minHeight: 142,
+    paddingHorizontal: 14,
+    paddingVertical: 11
+  },
   wordCardPressed: {
     opacity: 0.82,
     transform: [{ scale: 0.98 }]
@@ -483,6 +523,10 @@ const styles = StyleSheet.create({
     lineHeight: 48,
     textAlign: "center",
     writingDirection: "rtl"
+  },
+  wordArabicCompact: {
+    fontSize: 29,
+    lineHeight: 40
   },
   wordTransliteration: {
     color: "#756B59",
