@@ -18,7 +18,9 @@ from xml.etree import ElementTree
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SOURCE_PATH = PROJECT_ROOT / "references" / "Cleaned_Root_letters.xlsx"
 TRANSLATION_SOURCE_PATH = PROJECT_ROOT / "references" / "QuranRootLetters.xlsx"
+VERSE_SOURCE_PATH = PROJECT_ROOT / "references" / "quran_v2.json"
 OUTPUT_PATH = PROJECT_ROOT / "src" / "data" / "rootFamilies.generated.json"
+VERSE_OUTPUT_PATH = PROJECT_ROOT / "src" / "data" / "verses.generated.json"
 EXPECTED_HEADERS = ("ID", "ARABIC", "Transliteration", "Root_Letters")
 PREFERRED_FIRST_ROOT = "ا م ن"
 
@@ -114,6 +116,21 @@ def worksheet_rows(path: Path):
 
 def normalized_root(value: str) -> str:
     return " ".join(value.split())
+
+
+def load_verse_texts() -> OrderedDict[str, str]:
+    source = json.loads(VERSE_SOURCE_PATH.read_text(encoding="utf-8"))
+    verses: OrderedDict[str, str] = OrderedDict()
+    for surah in source:
+        for verse in surah.get("verses", []):
+            key = str(verse.get("key", "")).strip()
+            verse_text = str(verse.get("versetext", "")).strip()
+            if not key or not verse_text:
+                raise ValueError("Verse source contains a blank key or versetext")
+            if key in verses:
+                raise ValueError(f"Duplicate verse key in source: {key}")
+            verses[key] = verse_text
+    return verses
 
 
 def load_translation_occurrences() -> dict[str, list[dict[str, str]]]:
@@ -252,14 +269,40 @@ def build_families() -> dict[str, object]:
 
 def main() -> None:
     data = build_families()
+    source_verses = load_verse_texts()
+    required_verse_keys = {
+        word["sourceId"].replace(":", "-")
+        for family in data["families"]
+        for word in family["words"]
+    }
+    missing_verse_keys = required_verse_keys - source_verses.keys()
+    if missing_verse_keys:
+        raise ValueError(
+            "Missing Quran verse keys: " + ", ".join(sorted(missing_verse_keys)[:10])
+        )
+
+    verse_data = {
+        "source": "references/quran_v2.json",
+        "verseCount": len(required_verse_keys),
+        "verses": {
+            key: verse_text
+            for key, verse_text in source_verses.items()
+            if key in required_verse_keys
+        },
+    }
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(
         json.dumps(data, ensure_ascii=False, separators=(",", ":")) + "\n",
         encoding="utf-8",
     )
+    VERSE_OUTPUT_PATH.write_text(
+        json.dumps(verse_data, ensure_ascii=False, separators=(",", ":")) + "\n",
+        encoding="utf-8",
+    )
     print(
         f"Generated {data['rootCount']} roots and "
-        f"{data['uniqueRootWordPairs']} unique root-word pairs"
+        f"{data['uniqueRootWordPairs']} unique root-word pairs with "
+        f"{verse_data['verseCount']} referenced verses"
     )
 
 

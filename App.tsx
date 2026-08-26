@@ -2,9 +2,12 @@ import { StatusBar } from "expo-status-bar";
 import { useCallback, useRef, useState } from "react";
 import {
   FlatList,
+  Modal,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  Pressable,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   useWindowDimensions,
@@ -12,6 +15,7 @@ import {
 } from "react-native";
 
 import {
+  getVerseText,
   getPrototypeRootMeaning,
   rootFamilies,
   RootFamily,
@@ -42,11 +46,17 @@ function RootLetters({ root }: { root: RootFamily }) {
   );
 }
 
-function WordCard({ word }: { word: RootWord }) {
+function WordCard({ word, onPress }: { word: RootWord; onPress: () => void }) {
   return (
-    <View
+    <Pressable
       accessibilityLabel={`${word.arabic}, ${word.transliteration}, ${word.translation}`}
-      style={styles.wordCard}
+      accessibilityHint="Opens the Quran verse containing this word"
+      accessibilityRole="button"
+      onPress={onPress}
+      style={({ pressed }) => [
+        styles.wordCard,
+        pressed && styles.wordCardPressed
+      ]}
     >
       <Text style={styles.wordArabic}>{word.arabic}</Text>
       <Text style={styles.wordTransliteration}>{word.transliteration}</Text>
@@ -54,7 +64,7 @@ function WordCard({ word }: { word: RootWord }) {
       <Text numberOfLines={3} style={styles.wordMeaning}>
         {word.translation}
       </Text>
-    </View>
+    </Pressable>
   );
 }
 
@@ -62,8 +72,13 @@ export default function App() {
   const { width } = useWindowDimensions();
   const rootListRef = useRef<FlatList<RootFamily>>(null);
   const [activeRootIndex, setActiveRootIndex] = useState(0);
+  const [selectedWord, setSelectedWord] = useState<RootWord | null>(null);
   const pageWidth = Math.max(1, width - HORIZONTAL_GUTTER * 2);
   const activeRoot = rootFamilies[activeRootIndex] ?? rootFamilies[0]!;
+  const selectedVerseText = selectedWord
+    ? getVerseText(selectedWord.sourceId)
+    : undefined;
+  const [selectedSurah, selectedAyah] = selectedWord?.sourceId.split(":") ?? [];
 
   const rootLayout = useCallback(
     (_: ArrayLike<RootFamily> | null | undefined, index: number) => ({
@@ -164,13 +179,64 @@ export default function App() {
             horizontal
             key={activeRoot.id}
             keyExtractor={(word) => `${activeRoot.id}-${word.arabic}`}
-            renderItem={({ item }) => <WordCard word={item} />}
+            renderItem={({ item }) => (
+              <WordCard word={item} onPress={() => setSelectedWord(item)} />
+            )}
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.wordList}
             ItemSeparatorComponent={() => <View style={styles.wordGap} />}
           />
         </View>
       </View>
+
+      <Modal
+        animationType="fade"
+        onRequestClose={() => setSelectedWord(null)}
+        statusBarTranslucent
+        transparent
+        visible={selectedWord !== null}
+      >
+        <View style={styles.modalBackdrop}>
+          <View
+            accessibilityViewIsModal
+            style={styles.modalCard}
+          >
+            <Text style={styles.modalEyebrow}>QURANIC CONTEXT</Text>
+            <Text style={styles.modalTitle}>
+              Surah {selectedSurah} · Ayah {selectedAyah}
+            </Text>
+
+            {selectedWord ? (
+              <View style={styles.selectedWordRow}>
+                <Text style={styles.selectedWordArabic}>{selectedWord.arabic}</Text>
+                <Text numberOfLines={2} style={styles.selectedWordMeaning}>
+                  {selectedWord.translation}
+                </Text>
+              </View>
+            ) : null}
+
+            <ScrollView
+              contentContainerStyle={styles.verseScrollContent}
+              style={styles.verseScroll}
+            >
+              <Text selectable style={styles.verseText}>
+                {selectedVerseText ?? "Verse text is unavailable."}
+              </Text>
+            </ScrollView>
+
+            <Pressable
+              accessibilityRole="button"
+              onPress={() => setSelectedWord(null)}
+              style={({ pressed }) => [
+                styles.closeButton,
+                pressed && styles.closeButtonPressed
+              ]}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -375,6 +441,10 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
     width: 150
   },
+  wordCardPressed: {
+    opacity: 0.82,
+    transform: [{ scale: 0.98 }]
+  },
   wordArabic: {
     color: "#24241F",
     fontSize: 34,
@@ -399,5 +469,94 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 18,
     textAlign: "center"
+  },
+  modalBackdrop: {
+    alignItems: "center",
+    backgroundColor: "rgba(24, 29, 26, 0.68)",
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: 22,
+    paddingVertical: 48
+  },
+  modalCard: {
+    backgroundColor: "#FFFDF8",
+    borderRadius: 28,
+    maxHeight: "82%",
+    maxWidth: 520,
+    padding: 24,
+    shadowColor: "#111814",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.28,
+    shadowRadius: 24,
+    width: "100%"
+  },
+  modalEyebrow: {
+    color: "#A07642",
+    fontSize: 11,
+    fontWeight: "800",
+    letterSpacing: 1.6,
+    textAlign: "center"
+  },
+  modalTitle: {
+    color: "#292822",
+    fontSize: 21,
+    fontWeight: "700",
+    marginTop: 7,
+    textAlign: "center"
+  },
+  selectedWordRow: {
+    alignItems: "center",
+    alignSelf: "center",
+    backgroundColor: "#E9E2D4",
+    borderRadius: 18,
+    marginTop: 18,
+    maxWidth: "100%",
+    paddingHorizontal: 18,
+    paddingVertical: 10
+  },
+  selectedWordArabic: {
+    color: "#24241F",
+    fontSize: 26,
+    lineHeight: 36,
+    textAlign: "center",
+    writingDirection: "rtl"
+  },
+  selectedWordMeaning: {
+    color: "#625947",
+    fontSize: 12,
+    marginTop: 2,
+    textAlign: "center"
+  },
+  verseScroll: {
+    marginVertical: 20
+  },
+  verseScrollContent: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 4,
+    paddingVertical: 4
+  },
+  verseText: {
+    color: "#272720",
+    fontSize: 25,
+    lineHeight: 45,
+    textAlign: "right",
+    writingDirection: "rtl"
+  },
+  closeButton: {
+    alignItems: "center",
+    backgroundColor: "#2D675B",
+    borderRadius: 18,
+    justifyContent: "center",
+    minHeight: 48,
+    paddingHorizontal: 24
+  },
+  closeButtonPressed: {
+    backgroundColor: "#245348"
+  },
+  closeButtonText: {
+    color: "#FFFDF8",
+    fontSize: 15,
+    fontWeight: "700"
   }
 });

@@ -119,6 +119,8 @@ The Root Explorer currently demonstrates:
 - a separate horizontal carousel of unique Arabic forms for that root;
 - contextual translations matched from `references/QuranRootLetters.xlsx` by
   verse ID and occurrence position;
+- tappable word cards that open the complete Arabic verse from
+  `references/quran_v2.json` in a focused context popup;
 - right-to-left Arabic rendering and accessible labels;
 - a visible warning that prototype vocabulary has not passed content review.
 

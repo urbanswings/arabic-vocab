@@ -1,4 +1,5 @@
 import generatedRootData from "./rootFamilies.generated.json";
+import generatedVerseData from "./verses.generated.json";
 
 export type RootWord = {
   arabic: string;
@@ -48,3 +49,24 @@ export function getPrototypeRootMeaning(rootLabel: string): string {
     "The meaning for this root is awaiting language and content review."
   );
 }
+
+type GeneratedVerseData = {
+  source: string;
+  verseCount: number;
+  verses: Record<string, string>;
+};
+
+const verseData = generatedVerseData as GeneratedVerseData;
+
+export function verseKeyFromSourceId(sourceId: string): string {
+  return sourceId.replace(":", "-");
+}
+
+export function getVerseText(sourceId: string): string | undefined {
+  return verseData.verses[verseKeyFromSourceId(sourceId)];
+}
+
+export const verseDataSummary = {
+  source: verseData.source,
+  verseCount: verseData.verseCount
+};

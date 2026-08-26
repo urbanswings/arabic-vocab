@@ -88,6 +88,15 @@ form, the generated record retains the first occurrence's contextual
 translation and verse ID; later curriculum work must replace this prototype rule
 with reviewed lexical and contextual senses.
 
+The same build validates every retained verse ID against
+`references/quran_v2.json`, converting `surah:ayah` IDs to the source's
+`surah-ayah` keys. It emits `src/data/verses.generated.json` with only the 5,117
+verses referenced by current word cards. The mobile screen reads this bundled
+lookup when a card is tapped; the raw 6,236-verse research file is not parsed at
+runtime. Missing or duplicate verse keys fail generation instead of producing a
+silent empty popup. This remains prototype text until its edition, provenance,
+licence, and vocalization have passed content governance.
+
 ## Main records
 
 ### Content metadata

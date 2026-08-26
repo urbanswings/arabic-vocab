@@ -10,6 +10,7 @@ the canonical source for Quranic text, translation, morphology, or theology.
 | --- | --- | --- | --- |
 | `Cleaned_Root_letters.xlsx` | 77,431 occurrence rows with verse ID, Arabic form, transliteration, and `Root_Letters` | Current Root Explorer source; generates root groups and unique Arabic forms | Root labels are source classifications, include non-triliteral groups, and require provenance and methodology verification |
 | `QuranRootLetters.xlsx` | 77,431 occurrence rows with verse ID, Arabic form, contextual translation, transliteration, and letter-name columns | Supplies the contextual translation displayed on Root Explorer word cards | `ID` identifies a verse and is not unique per word; translations are occurrence-specific and must not be treated as universal definitions |
+| `quran_v2.json` | 114 surahs containing 6,236 verses keyed as `surah-ayah` | Supplies the complete Arabic verse shown when a Root Explorer word card is tapped | Provenance, licence, Quranic text edition, and vocalization policy must be verified before release |
 | `mostFrequent_5000_quranWords.csv` | 5,000 ranked surface forms with occurrence counts | Candidate discovery and frequency comparison | Provenance, tokenization rules, licence, and edition are not recorded in the file |
 | `Quran-All-Words.xlsx` | 5,159 populated rows with word, frequency, part of speech, and cumulative percentage | Frequency and part-of-speech comparison | Notes attribute the data to the Quranic Arabic Corpus; redistribution terms and exact processing method still require verification |
 | `quranRoots.json` | 1,922 records with a name/root label, count, and occurrence references | Root-family candidate discovery | Provenance and licence are not recorded; the occurrence coordinate format must be documented and verified before use |
@@ -22,6 +23,7 @@ The hashes below identify the exact files first added to this repository:
 ```text
 064c734b80cfb831bf1996c21423d4e709272b526978c0cac04ab704bc1a98b5  Cleaned_Root_letters.xlsx
 a1a1c835715832c54819cdffd5bccafb1e49d149216c6635b10497f632db35d5  QuranRootLetters.xlsx
+e226105ef527ee1e178627b091493503fb54c266ea6db42bcb61066c0f0806a9  quran_v2.json
 9f543489c43cf747fc22542613e3d6f7d6d5406ac2d109c863eb9f9df45e88bd  80_percent.pdf
 a5da310ebcaf972d9d1bf501b3f183344c3d929698cbb1e32fa1800547742744  Quran-All-Words.xlsx
 61842ad247ee8b7fac756f7f46228a6e348711e8f623b935d2c977cb90c9d3de  mostFrequent_5000_quranWords.csv
@@ -81,12 +83,15 @@ Run `npm run generate:roots` from the repository root. The generator:
    order;
 6. preserves the transliteration, contextual translation, and verse ID from the
    first retained occurrence;
-7. writes `src/data/rootFamilies.generated.json` for the app.
+7. converts each retained verse ID from `surah:ayah` to the JSON source's
+   `surah-ayah` key and fails if any required verse is missing;
+8. writes `src/data/rootFamilies.generated.json` and a compact
+   `src/data/verses.generated.json` containing only referenced verses.
 
-The current snapshot produces 1,799 root groups and 17,623 unique root–word
-pairs. Diacritic or clitic variants remain separate because the source strings
-are not linguistically collapsed. The generated file is an interaction dataset,
-not reviewed curriculum content.
+The current snapshot produces 1,799 root groups, 17,623 unique root–word pairs,
+and 5,117 referenced verses. Diacritic or clitic variants remain separate
+because the source strings are not linguistically collapsed. The generated
+files are interaction datasets, not reviewed curriculum content.
 
 Both workbooks contain 6,236 distinct verse IDs, and those IDs repeat up to 128
 times. Joining on `ID` alone would incorrectly assign the first word's
