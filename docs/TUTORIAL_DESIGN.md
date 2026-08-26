@@ -314,8 +314,23 @@ resume at a sensible boundary rather than in the middle of an animation.
 ### Root explorer
 
 - Purpose: see related, attested words branching from a shared root.
-- Input: select a word to reveal its pattern, meaning, and verse occurrence.
+- Input: swipe between roots, browse the responsive word-family shelf, and
+  select a word to reveal its contextual translation and complete verse.
 - Constraint: distinguish a helpful relationship from a guaranteed definition.
+
+The implemented prototype uses three visual zones:
+
+1. root letters and horizontal root navigation;
+2. a short, review-pending root explanation;
+3. horizontally browsable word cards, arranged in two rows on tall phones and
+   one row on shorter screens.
+
+Selecting a word opens a focused Quranic-context view with its surah and ayah,
+the complete right-to-left verse, and an inline highlight on the selected form.
+The highlight supports visual recognition; it does not imply that the card's
+short contextual translation is a complete lexical definition. Exact Quranic
+text, root classifications, translations, and explanations remain blocked from
+release until the reviews defined in the governance document are complete.
 
 ### Pattern highlighter
 

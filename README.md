@@ -117,10 +117,13 @@ The Root Explorer currently demonstrates:
   `references/Cleaned_Root_letters.xlsx`;
 - an explanation that updates with the selected root;
 - a separate horizontal carousel of unique Arabic forms for that root;
+- a responsive word shelf: two rows on tall phones such as iPhone 14 Pro Max
+  and one row on shorter screens;
 - contextual translations matched from `references/QuranRootLetters.xlsx` by
   verse ID and occurrence position;
 - tappable word cards that open the complete Arabic verse from
   `references/quran_v2.json` in a focused context popup;
+- inline highlighting of the selected Arabic form when it occurs in that verse;
 - right-to-left Arabic rendering and accessible labels;
 - a visible warning that prototype vocabulary has not passed content review.
 
@@ -129,6 +132,17 @@ Regenerate the app dataset after an intentional workbook update with:
 ```bash
 npm run generate:roots
 ```
+
+Only three reference files currently feed this screen:
+
+| Reference | Use in the prototype |
+| --- | --- |
+| `references/Cleaned_Root_letters.xlsx` | Root letters, Arabic word forms, transliteration, source order, and verse `ID` |
+| `references/QuranRootLetters.xlsx` | Contextual English translation matched to each occurrence |
+| `references/quran_v2.json` | Complete Arabic verse text retrieved through the retained verse `ID` |
+
+The other files in `references/` remain research inputs and do not currently
+control the Root Explorer UI.
 
 ## Architecture
 

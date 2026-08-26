@@ -104,6 +104,30 @@ prototype displays the translation from the first retained occurrence and keeps
 its verse ID for traceability. This is a deterministic display rule, not a claim
 that the translation is a complete lexical definition.
 
+### Current screen usage
+
+The implemented Root Explorer uses only these reference inputs:
+
+- `Cleaned_Root_letters.xlsx` supplies the root grouping, Arabic card text,
+  transliteration, ordering, and retained `ID` for the first occurrence of each
+  exact Arabic form;
+- `QuranRootLetters.xlsx` supplies that occurrence's contextual English
+  translation after row-alignment validation;
+- `quran_v2.json` supplies `versetext` after converting a retained workbook ID
+  such as `13:13` to a JSON key such as `13-13`.
+
+At runtime, the screen uses generated JSON rather than parsing the workbooks or
+raw Quran file. It swipes through generated root groups, lays the words out in
+one or two rows according to screen height, and opens the matched verse when a
+word is selected. The selected Arabic string is highlighted inline when it
+appears exactly in `versetext`. Orthographic differences between sources must
+remain visible for later reconciliation; the app must not silently rewrite the
+Quranic text to force a match.
+
+`mostFrequent_5000_quranWords.csv`, `Quran-All-Words.xlsx`, `quranRoots.json`,
+and `80_percent.pdf` do not currently drive this screen. They remain candidate
+research sources for later reviewed curriculum work.
+
 ## Proposed normalized candidate record
 
 ```ts

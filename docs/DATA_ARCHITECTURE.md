@@ -97,6 +97,27 @@ runtime. Missing or duplicate verse keys fail generation instead of producing a
 silent empty popup. This remains prototype text until its edition, provenance,
 licence, and vocalization have passed content governance.
 
+### Root Explorer presentation mapping
+
+The screen consumes the generated data as follows:
+
+| UI element | Generated field | Original reference |
+| --- | --- | --- |
+| Root circles | `letters` | `Cleaned_Root_letters.xlsx` → `Root_Letters` |
+| Word-card Arabic | `word.arabic` | `Cleaned_Root_letters.xlsx` → `ARABIC` |
+| Transliteration | `word.transliteration` | `Cleaned_Root_letters.xlsx` → `Transliteration` |
+| Contextual card translation | `word.translation` | `QuranRootLetters.xlsx` occurrence matched by `ID` and position |
+| Surah and ayah | `word.sourceId` | Workbook `ID`, formatted as `surah:ayah` |
+| Popup Arabic verse | verse lookup by converted ID | `quran_v2.json` → `key` and `versetext` |
+
+Word cards are grouped into horizontal columns at presentation time. Tall
+screens display two cards per column; shorter screens display one. This is a
+responsive view transformation and does not change ordering or generated
+content. Tapping a card looks up its retained `sourceId`, displays the verse in
+a modal, and highlights every exact occurrence of the selected Arabic string.
+The whole verse remains the accessibility label so nested highlight styling
+does not fragment screen-reader output.
+
 ## Main records
 
 ### Content metadata
