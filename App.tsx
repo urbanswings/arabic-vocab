@@ -68,6 +68,33 @@ function WordCard({ word, onPress }: { word: RootWord; onPress: () => void }) {
   );
 }
 
+function HighlightedVerse({
+  verseText,
+  selectedArabic
+}: {
+  verseText: string;
+  selectedArabic: string;
+}) {
+  const parts = verseText.split(selectedArabic);
+
+  return (
+    <Text
+      accessibilityLabel={verseText}
+      selectable
+      style={styles.verseText}
+    >
+      {parts.map((part, index) => (
+        <Text key={`${index}-${part}`}>
+          {part}
+          {index < parts.length - 1 ? (
+            <Text style={styles.highlightedVerseWord}>{selectedArabic}</Text>
+          ) : null}
+        </Text>
+      ))}
+    </Text>
+  );
+}
+
 export default function App() {
   const { width } = useWindowDimensions();
   const rootListRef = useRef<FlatList<RootFamily>>(null);
@@ -219,9 +246,14 @@ export default function App() {
               contentContainerStyle={styles.verseScrollContent}
               style={styles.verseScroll}
             >
-              <Text selectable style={styles.verseText}>
-                {selectedVerseText ?? "Verse text is unavailable."}
-              </Text>
+              {selectedVerseText && selectedWord ? (
+                <HighlightedVerse
+                  selectedArabic={selectedWord.arabic}
+                  verseText={selectedVerseText}
+                />
+              ) : (
+                <Text style={styles.verseText}>Verse text is unavailable.</Text>
+              )}
             </ScrollView>
 
             <Pressable
@@ -542,6 +574,11 @@ const styles = StyleSheet.create({
     lineHeight: 45,
     textAlign: "right",
     writingDirection: "rtl"
+  },
+  highlightedVerseWord: {
+    backgroundColor: "#E7C77D",
+    color: "#173F36",
+    fontWeight: "700"
   },
   closeButton: {
     alignItems: "center",
