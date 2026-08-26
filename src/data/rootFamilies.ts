@@ -2,7 +2,9 @@ import generatedRootData from "./rootFamilies.generated.json";
 
 export type RootWord = {
   arabic: string;
+  sourceId: string;
   transliteration: string;
+  translation: string;
 };
 
 export type RootFamily = {
@@ -14,6 +16,8 @@ export type RootFamily = {
 
 type GeneratedRootData = {
   source: string;
+  translationSource: string;
+  translationSelection: string;
   sourceRows: number;
   rootCount: number;
   uniqueRootWordPairs: number;
@@ -25,6 +29,8 @@ const rootData = generatedRootData as GeneratedRootData;
 export const rootFamilies = rootData.families;
 export const rootDataSummary = {
   source: rootData.source,
+  translationSource: rootData.translationSource,
+  translationSelection: rootData.translationSelection,
   sourceRows: rootData.sourceRows,
   rootCount: rootData.rootCount,
   uniqueRootWordPairs: rootData.uniqueRootWordPairs

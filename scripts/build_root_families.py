@@ -10,13 +10,14 @@ from __future__ import annotations
 import json
 import re
 import zipfile
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 from pathlib import Path
 from xml.etree import ElementTree
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SOURCE_PATH = PROJECT_ROOT / "references" / "Cleaned_Root_letters.xlsx"
+TRANSLATION_SOURCE_PATH = PROJECT_ROOT / "references" / "QuranRootLetters.xlsx"
 OUTPUT_PATH = PROJECT_ROOT / "src" / "data" / "rootFamilies.generated.json"
 EXPECTED_HEADERS = ("ID", "ARABIC", "Transliteration", "Root_Letters")
 PREFERRED_FIRST_ROOT = "ا م ن"
@@ -115,7 +116,37 @@ def normalized_root(value: str) -> str:
     return " ".join(value.split())
 
 
+def load_translation_occurrences() -> dict[str, list[dict[str, str]]]:
+    rows = worksheet_rows(TRANSLATION_SOURCE_PATH)
+    headers = tuple(next(rows))
+    required_headers = ("ID", "ARABIC", "Translation", "Transliteration")
+    missing_headers = [header for header in required_headers if header not in headers]
+    if missing_headers:
+        raise ValueError(
+            f"Translation workbook is missing headers: {missing_headers}"
+        )
+
+    header_index = {header: headers.index(header) for header in required_headers}
+    occurrences: dict[str, list[dict[str, str]]] = defaultdict(list)
+    for row in rows:
+        source_id = row[header_index["ID"]].strip()
+        if not source_id:
+            continue
+        occurrences[source_id].append(
+            {
+                "arabic": row[header_index["ARABIC"]].strip(),
+                "transliteration": row[
+                    header_index["Transliteration"]
+                ].strip(),
+                "translation": row[header_index["Translation"]].strip(),
+            }
+        )
+    return occurrences
+
+
 def build_families() -> dict[str, object]:
+    translation_occurrences = load_translation_occurrences()
+    occurrence_positions: dict[str, int] = defaultdict(int)
     rows = worksheet_rows(SOURCE_PATH)
     headers = tuple(next(rows))
     if headers[: len(EXPECTED_HEADERS)] != EXPECTED_HEADERS:
@@ -124,7 +155,9 @@ def build_families() -> dict[str, object]:
         )
 
     header_index = {header: index for index, header in enumerate(headers)}
-    families: OrderedDict[str, OrderedDict[str, str]] = OrderedDict()
+    families: OrderedDict[
+        str, OrderedDict[str, dict[str, str]]
+    ] = OrderedDict()
     source_rows = 0
 
     for row in rows:
@@ -132,14 +165,56 @@ def build_families() -> dict[str, object]:
         if len(row) <= header_index["Root_Letters"]:
             continue
 
+        source_id = row[header_index["ID"]].strip()
         arabic = row[header_index["ARABIC"]].strip()
         root = normalized_root(row[header_index["Root_Letters"]])
         transliteration = row[header_index["Transliteration"]].strip()
-        if not arabic or not root:
+        if not source_id or not arabic or not root:
             continue
 
+        occurrence_index = occurrence_positions[source_id]
+        occurrence_positions[source_id] += 1
+        translations_for_id = translation_occurrences.get(source_id, [])
+        if occurrence_index >= len(translations_for_id):
+            raise ValueError(
+                f"Missing translation occurrence {occurrence_index + 1} "
+                f"for ID {source_id}"
+            )
+        translation_record = translations_for_id[occurrence_index]
+        if (
+            translation_record["arabic"] != arabic
+            or translation_record["transliteration"] != transliteration
+        ):
+            raise ValueError(
+                f"Translation mismatch for ID {source_id}, occurrence "
+                f"{occurrence_index + 1}: {arabic}"
+            )
+        if not translation_record["translation"]:
+            raise ValueError(
+                f"Empty translation for ID {source_id}, occurrence "
+                f"{occurrence_index + 1}"
+            )
+
         words = families.setdefault(root, OrderedDict())
-        words.setdefault(arabic, transliteration)
+        words.setdefault(
+            arabic,
+            {
+                "transliteration": transliteration,
+                "translation": translation_record["translation"],
+                "sourceId": source_id,
+            },
+        )
+
+    unmatched_translation_ids = [
+        source_id
+        for source_id, occurrences in translation_occurrences.items()
+        if occurrence_positions[source_id] != len(occurrences)
+    ]
+    if unmatched_translation_ids:
+        raise ValueError(
+            "Translation rows were not fully matched for IDs: "
+            + ", ".join(unmatched_translation_ids[:10])
+        )
 
     ordered_roots = list(families)
     if PREFERRED_FIRST_ROOT in families:
@@ -154,14 +229,18 @@ def build_families() -> dict[str, object]:
                 "rootLabel": root,
                 "letters": root.split(" "),
                 "words": [
-                    {"arabic": arabic, "transliteration": transliteration}
-                    for arabic, transliteration in families[root].items()
+                    {"arabic": arabic, **word_data}
+                    for arabic, word_data in families[root].items()
                 ],
             }
         )
 
     return {
         "source": "references/Cleaned_Root_letters.xlsx",
+        "translationSource": "references/QuranRootLetters.xlsx",
+        "translationSelection": (
+            "First occurrence for each exact ARABIC form within a root"
+        ),
         "sourceRows": source_rows,
         "rootCount": len(output_families),
         "uniqueRootWordPairs": sum(

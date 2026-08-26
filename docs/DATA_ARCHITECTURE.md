@@ -80,6 +80,14 @@ and transliteration. This narrow transformation is reproducible, but it does not
 approve the workbook's root methodology or turn surface forms into reviewed
 lemmas.
 
+The generator enriches each occurrence from `references/QuranRootLetters.xlsx`.
+Because `ID` identifies a verse rather than an individual word, the join key is
+the verse ID plus occurrence position within that ID. Arabic and transliteration
+must also match before a translation is accepted. For each deduplicated Arabic
+form, the generated record retains the first occurrence's contextual
+translation and verse ID; later curriculum work must replace this prototype rule
+with reviewed lexical and contextual senses.
+
 ## Main records
 
 ### Content metadata

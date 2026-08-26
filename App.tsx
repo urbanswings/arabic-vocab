@@ -45,11 +45,15 @@ function RootLetters({ root }: { root: RootFamily }) {
 function WordCard({ word }: { word: RootWord }) {
   return (
     <View
-      accessibilityLabel={`${word.arabic}, ${word.transliteration}`}
+      accessibilityLabel={`${word.arabic}, ${word.transliteration}, ${word.translation}`}
       style={styles.wordCard}
     >
       <Text style={styles.wordArabic}>{word.arabic}</Text>
       <Text style={styles.wordTransliteration}>{word.transliteration}</Text>
+      <View style={styles.wordDivider} />
+      <Text numberOfLines={3} style={styles.wordMeaning}>
+        {word.translation}
+      </Text>
     </View>
   );
 }
@@ -138,7 +142,9 @@ export default function App() {
           <Text accessibilityLiveRegion="polite" style={styles.meaningText}>
             {getPrototypeRootMeaning(activeRoot.rootLabel)}
           </Text>
-          <Text style={styles.prototypeNotice}>Prototype content · review pending</Text>
+          <Text style={styles.prototypeNotice}>
+            Prototype content · contextual translations · review pending
+          </Text>
         </View>
 
         <View style={styles.familySection}>
@@ -381,5 +387,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontStyle: "italic",
     marginTop: 2
+  },
+  wordDivider: {
+    backgroundColor: "#E7DFD1",
+    height: 1,
+    marginVertical: 10,
+    width: 42
+  },
+  wordMeaning: {
+    color: "#4F493E",
+    fontSize: 13,
+    lineHeight: 18,
+    textAlign: "center"
   }
 });
